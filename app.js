@@ -28,7 +28,9 @@ app.use('/books', booksRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  res.redirect('/books');
+  const err = new Error('Page Not Found');
+  err.status = 404;
+  next(err);
 });
 
 (async () => {
@@ -44,15 +46,11 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  if (err.message && err.status) {
-    console.log(err);
-    res.render('error', {err});
+  if (err.message && err.status === 404) {
+    res.redirect('/books')
   }
   else {
-    err.message = 'Sorry, something went wrong.';
-    err.status = 500;
-    console.log(err);
-    res.render('error', {err});
+    res.render('error', {message: err.message, error: {}});
   }
 });
 
