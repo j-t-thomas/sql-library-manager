@@ -35,25 +35,24 @@ router.post('/new', async function (req, res, next) {
 });
 
 // Render the 'update-book' view for editing a specific book
-router.get('/books/:id', async function (req, res, next) {
+router.get('/:id', async function (req, res, next) {
   const book = await Book.findByPk(req.params.id);
-  if (book === null) {
-    res.status(404); 
-    res.render('page-not-found');
-  } else {
+  if (book) {
     res.render('update-book', { book });
+  } else {
+    next();
   }
 });
 
 // Update a specific book, redirect to '/books/' on success, or re-render 'update-book' with errors on failure
-router.post('/books', async function (req, res, next) {
+router.post('/:id', async function (req, res, next) {
   let book;
   try {
     // Find the book by its ID and update its data
     book = await Book.findByPk(req.params.id);
     if (book) {
       await book.update(req.body);
-      res.redirect('/books/' + book.id);
+      res.redirect('/' + book.id);
     } else {
       res.sendStatus(404); // Book not found
     }
