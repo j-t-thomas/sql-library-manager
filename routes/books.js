@@ -38,7 +38,7 @@ router.post('/new', async function (req, res, next) {
 router.get('/books/:id', async function (req, res, next) {
   const book = await Book.findByPk(req.params.id);
   if (book) {
-    res.render('update-book', { book });
+    res.render('update-book', { book: book });
   } else {
     res.sendStatus(404); // Book not found
   }
