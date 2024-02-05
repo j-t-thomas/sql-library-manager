@@ -35,7 +35,7 @@ router.post('/new', async function (req, res, next) {
 });
 
 // Render the 'update-book' view for editing a specific book
-router.get('/:id', async function (req, res, next) {
+router.get('/books/:id', async function (req, res, next) {
   const book = await Book.findByPk(req.params.id);
   if (book === null) {
     res.status(404); 
@@ -46,7 +46,7 @@ router.get('/:id', async function (req, res, next) {
 });
 
 // Update a specific book, redirect to '/books/' on success, or re-render 'update-book' with errors on failure
-router.post('/:id', async function (req, res, next) {
+router.post('/books', async function (req, res, next) {
   let book;
   try {
     // Find the book by its ID and update its data
