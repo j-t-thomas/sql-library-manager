@@ -9,7 +9,7 @@ block content
             h2.error Oops!
             ul.error
                each error in errors
-                  li #{error.message}
+                  li= error.message
          
          p
            label(for='title') Title
@@ -26,4 +26,4 @@ block content
          p   
             input(type='submit' value='submit')
          p
-            a(class='button' href='/books') Cancel    
+            a(class='button' href='/') Cancel    

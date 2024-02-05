@@ -1,13 +1,13 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var Sequelize = require('sequelize');
-var Book = require('../models').Book;
 
+var { Book } = require("../models");
+
+const app = express();
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
-  res.redirect('/books');
-  //res.render('index', { title: 'Express' });
+router.get("/", async function (req, res, next) {
+  res.redirect("/books");
 });
 
 module.exports = router;

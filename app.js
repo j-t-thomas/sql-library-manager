@@ -24,18 +24,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/books', booksRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  res.redirect('/books');
 });
 
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log("Connection to the database successful!");
+    console.log('Connection to the database successful!');
   } catch (error) {
-    console.error("Error connecting to the database: ", error);
+    console.error('Error connecting to the database: ', error);
   }
   await sequelize.sync();
 })();
@@ -48,7 +49,7 @@ app.use(function(err, req, res, next) {
     res.render('error', {err});
   }
   else {
-    err.message = "Sorry, something went wrong.";
+    err.message = 'Sorry, something went wrong.';
     err.status = 500;
     console.log(err);
     res.render('error', {err});
