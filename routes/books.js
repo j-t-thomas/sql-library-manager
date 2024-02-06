@@ -22,7 +22,7 @@ router.post('/new', async function (req, res, next) {
   try {
     // Attempt to create a new book with data from the request body
     book = await Book.create(req.body);
-    res.redirect('/books/' );
+    res.redirect('/' );
   } catch (error) {
     // If there are validation errors, re-render 'new-book' with the errors
     if (error.name === 'SequelizeValidationError') {
@@ -36,14 +36,12 @@ router.post('/new', async function (req, res, next) {
 
 // Render the 'update-book' view for editing a specific book
 router.get("/:id", async function (req, res, next) {
-  const book = await Book.findByPk(req.params.id);
-  if (book === null) {
-    next(404);
-    res.render("page-not-found");
-    //console.log("book is null");
-  } else {
-    res.render("update-book", { book });
-  }
+    const book = await Book.findByPk(req.params.id);
+    if (book) {
+      res.render("update-book", { book });
+    } else {
+      next();
+    }
 });
 
 // Update a specific book, redirect to '/books/' on success, or re-render 'update-book' with errors on failure
@@ -54,18 +52,16 @@ router.post('/:id', async function (req, res, next) {
     book = await Book.findByPk(req.params.id);
     if (book) {
       await book.update(req.body);
-      res.redirect('/' + book.id);
-    } else {
-      res.sendStatus(404); // Book not found
-    }
+      res.redirect('/');
+    } 
   } catch (error) {
     // If there are validation errors, re-render 'update-book' with the errors
     if (error.name === 'SequelizeValidationError') {
       book = await Book.build(req.body);
       book.id = req.params.id;
-      res.render('up-date-book', { book, errors: error.errors });
+      res.render('update-book', { book, errors: error.errors });
     } else {
-      throw error; // Propagate other errors
+      next(); // Propagate other errors
     }
   }
 });
@@ -77,7 +73,7 @@ router.post('/:id/delete', async function (req, res, next) {
     await book.destroy();
     res.redirect('/');
   } else {
-    res.sendStatus(404); // Book not found
+    next(); // Book not found
   }
 });
 

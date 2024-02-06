@@ -26,13 +26,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/books', booksRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  const err = new Error('Page Not Found');
-  err.status = 404;
-  next(err);
-});
-
 (async () => {
   try {
     await sequelize.authenticate();
@@ -43,15 +36,24 @@ app.use(function(req, res, next) {
   await sequelize.sync();
 })();
 
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+  const err = new Error('Page Not Found');
+  err.status = 404;
+  next(err);
+});
 
-// error handler
-app.use(function(err, req, res, next) {
-  if (err.message && err.status === 404) {
-    res.redirect('/books')
+
+app.use((err, req, res, next) => {
+  if (err) {
+    console.log('Global error handler called', err);
   }
-  else {
-    res.status(404);
-    res.render('page-not-found', {message: err.message, error: {}});
+
+  if (err.status === 404) {
+    res.status(404).render('page-not-found', { err });
+  } else {
+    err.message = err.message || `Oops!  It looks like something went wrong on the server.`;
+    res.status(err.status || 500).render('error', { err });
   }
 });
 
