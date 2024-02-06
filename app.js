@@ -50,7 +50,8 @@ app.use(function(err, req, res, next) {
     res.redirect('/books')
   }
   else {
-    res.render('error', {message: err.message, error: {}});
+    res.status(404);
+    res.render('page-not-found', {message: err.message, error: {}});
   }
 });
 
