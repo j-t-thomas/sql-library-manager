@@ -35,12 +35,14 @@ router.post('/new', async function (req, res, next) {
 });
 
 // Render the 'update-book' view for editing a specific book
-router.get('/:id', async function (req, res, next) {
+router.get("/:id", async function (req, res, next) {
   const book = await Book.findByPk(req.params.id);
-  if (book) {
-    res.render('update-book', { book });
+  if (book === null) {
+    next(404);
+    res.render("page-not-found");
+    //console.log("book is null");
   } else {
-    next();
+    res.render("update-book", { book });
   }
 });
 
